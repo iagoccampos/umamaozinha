@@ -9,6 +9,8 @@ var express = require("express"),
 
 var User = require("./models/user");
 
+var userRoutes = require("./routes/user");
+
 mongoose.connect(process.env.DATABASEURL, { useNewUrlParser: true });
 
 app.use(express.static(__dirname + "/public"));
@@ -24,12 +26,14 @@ app.use(require("express-session")({
     saveUninitialized: false,
     cookie: { _expires: 5000000 }
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//Force use https
 app.enable('trust proxy');
 app.use(function(req, res, next) {
     res.locals.currentUser = req.user;
@@ -48,6 +52,8 @@ app.get("/", function(req, res) {
     res.send("Olar!");
 });
 
+app.use("/usuarios", userRoutes);
+
 app.listen(port, process.env.IP, function() {
-    console.log("Server started.");
+    console.log("Server started. " + process.env.IP);
 });
