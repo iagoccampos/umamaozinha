@@ -1,6 +1,8 @@
 var mongoose = require("mongoose");
 var passportLocalMongoose = require("passport-local-mongoose");
 
+var Volunteer = require("./volunteer");
+
 var UserSchema = mongoose.Schema({
     username: {
         type: String,
@@ -8,11 +10,6 @@ var UserSchema = mongoose.Schema({
         maxlength: [20, "Conta deve conter no máximo 20 caracteres."]
     },
     password: String,
-    name: {
-        type: String,
-        required: true,
-        maxlength: [20, "Nome deve conter no máximo 20 caracteres."]
-    },
     token: {
         type: String
     },
@@ -22,6 +19,22 @@ var UserSchema = mongoose.Schema({
     }
 });
 
+UserSchema.statics.createrUser = function(user, cb){
+    module.register(new module({
+        username: user.username,
+        name: user.name,
+        email: user.email
+    }), user.password, function(err, createdUser){
+        if(err)
+            return cb(err);
+        
+        if(user.type == "volunteer")
+            Volunteer.createVolunteer(createdUser, cb);
+    });
+};
+
 UserSchema.plugin(passportLocalMongoose);
 
-module.exports = mongoose.model("User", UserSchema);
+var module = mongoose.model("User", UserSchema);
+
+module.exports = module;

@@ -4,18 +4,8 @@ var passport = require("passport");
 
 var User = require("../models/user");
 
-router.get("/", function(req, res) {
-    res.send('oi');
-});
-
 router.post("/cadastrar", function(req, res) {
-    let user = req.body.user;
-
-    User.register(new User({
-        username: user.username,
-        name: user.name,
-        email: user.email
-    }), user.password, function(err, user) {
+    User.createrUser(req.body.user, function(err, user){
         if (err) {
             res.send(err);
         }

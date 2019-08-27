@@ -22,4 +22,17 @@ var VolunteerSchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Volunteer", VolunteerSchema);
+VolunteerSchema.statics.createVolunteer = function(user, cb){
+    let obj = {};
+    obj.name = user.name;
+    obj.cpf = user.cpf;
+    obj.phone = user.phone;
+    obj.areas = user.areas;
+    obj.user = user._id;
+    
+    module.create(obj, cb);
+};
+
+var module = mongoose.model("Volunteer", VolunteerSchema);
+
+module.exports = module;

@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 var EntitySchema = mongoose.Schema({
-    name_company: {
+    company_name: {
         type: String,
         required: true
     },
@@ -19,4 +19,16 @@ var EntitySchema = mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Entity", EntitySchema);
+EntitySchema.statics.createEntity = function(user, cb){
+    let obj = {};
+    obj.company_name = user.company_name;
+    obj.cpf_cnpj = user.cpf_cnpj;
+    obj.phone = user.phone;
+    obj.user = user._id;
+    
+    module.create(obj, cb);
+};
+
+var module = mongoose.model("Entity", EntitySchema);
+
+module.exports = module;

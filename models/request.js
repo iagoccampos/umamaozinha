@@ -10,7 +10,7 @@ var RequestSchema = mongoose.Schema({
     },
     note: {
         type: String,
-        requi: true
+        required: true
     },
     entity: {
         type: mongoose.Schema.Types.ObjectId,
@@ -19,9 +19,15 @@ var RequestSchema = mongoose.Schema({
     },
     volunteer: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Volunteer",
-        required: true
+        ref: "Volunteer"
     }
 });
 
-module.exports = mongoose.model("Request", RequestSchema);
+RequestSchema.statics.createRequest = function(request, entity, cb){
+    request.entity = entity._id;
+    //parei aqui
+};
+
+var module = mongoose.model("Request", RequestSchema);
+
+module.exports = module;
